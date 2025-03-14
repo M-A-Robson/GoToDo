@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"todo/db"
+
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +25,7 @@ todo complete 16.`,
 			fmt.Printf("Invalid argument: %s is not an integer\n", args[0])
 			return
 		}
-		// not sure how to get db package here
-		err = db.setTodoComplete(i)
+		err = db.SetTodoComplete(i)
 		if err != nil {
 			fmt.Printf("Error marking todo complete: %s\n", err)
 		} else {
@@ -35,14 +36,4 @@ todo complete 16.`,
 
 func init() {
 	rootCmd.AddCommand(completeCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// completeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// completeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

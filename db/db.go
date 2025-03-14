@@ -15,7 +15,7 @@ type Todo struct {
 
 var DB *sql.DB
 
-func initialiseDatabase() {
+func InitialiseDatabase() {
 	var err error
 	DB, err = sql.Open("sqlite3", "./todo.db")
 	if err != nil {
@@ -25,7 +25,7 @@ func initialiseDatabase() {
 	createTableSql := `
 	CREATE TABLE IF NOT EXISTS todos (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	content TEXT
+	content TEXT,
 	complete BOOLEAN default 0
 	);`
 
@@ -35,7 +35,7 @@ func initialiseDatabase() {
 	}
 }
 
-func getAllTodos() ([]Todo, error) {
+func GetAllTodos() ([]Todo, error) {
 	todos := []Todo{}
 	rows, err := DB.Query("SELECT id, content, complete FROM todos")
 	if err != nil {
@@ -52,7 +52,7 @@ func getAllTodos() ([]Todo, error) {
 	return todos, nil
 }
 
-func getTodo(id int) (*Todo, error) {
+func GetTodo(id int) (*Todo, error) {
 	row := DB.QueryRow(
 		"SELECT * FROM todos WHERE id = ?",
 		id)
@@ -64,37 +64,37 @@ func getTodo(id int) (*Todo, error) {
 	return todo, nil
 }
 
-func createTodo(content string) error {
+func CreateTodo(content string) error {
 	_, err := DB.Exec(
 		"INSERT INTO todos(content) VALUES(?)",
 		content)
 	return err
 }
 
-func deleteTodo(id int) error {
+func DeleteTodo(id int) error {
 	_, err := DB.Exec(
 		"DELETE FROM todos WHERE id = ?",
 		id)
 	return err
 }
 
-func editTodo(id int, content string) error {
+func EditTodo(id int, content string) error {
 	_, err := DB.Exec(
-		"UPDATE todos SET content = VALUES(?) WHERE id = ?",
+		"UPDATE todos SET content = ? WHERE id = ?",
 		content,
 		id)
 	return err
 }
 
-func setTodoComplete(id int) error {
-	return setTodoCompleteStatus(id, true)
+func SetTodoComplete(id int) error {
+	return SetTodoCompleteStatus(id, true)
 }
 
-func setTodoNotComplete(id int) error {
-	return setTodoCompleteStatus(id, false)
+func SetTodoNotComplete(id int) error {
+	return SetTodoCompleteStatus(id, false)
 }
 
-func setTodoCompleteStatus(id int, status bool) error {
+func SetTodoCompleteStatus(id int, status bool) error {
 	var val string = "0"
 	if status {
 		val = "1"

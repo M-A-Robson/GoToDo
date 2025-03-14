@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strings"
 
+	"todo/db"
+
 	"github.com/spf13/cobra"
 )
 
@@ -15,25 +17,19 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a new todo",
 	Long: `Add a new todo. For example:
-
 todo add [task description].`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		task_description := strings.Join(args, " ")
-		fmt.Println("Echo: " + task_description)
+		err := db.CreateTodo(task_description)
+		if err != nil {
+			fmt.Printf("Error creating todo: %s\n", err)
+		} else {
+			fmt.Println("Added Todo: " + task_description)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

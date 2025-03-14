@@ -1,11 +1,13 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"todo/db"
 
 	"github.com/spf13/cobra"
 )
@@ -13,15 +15,30 @@ import (
 // editCmd represents the edit command
 var editCmd = &cobra.Command{
 	Use:   "edit",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Edit todo content",
+	Long: `Edit todo by id. For example:
+todo edit [id] [new content].
+This will replace the content of the specified todo item`,
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("edit called")
+		i, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Printf("Invalid argument: %s is not an integer\n", args[0])
+			return
+		}
+		todo, err := db.GetTodo(i)
+		if err != nil {
+			fmt.Printf("Error finding todo: %s\n", err)
+		} else {
+			fmt.Println("todo", todo.ID, "previous content:", todo.Content)
+		}
+		new_content := strings.Join(args[1:], " ")
+		err = db.EditTodo(i, new_content)
+		if err != nil {
+			fmt.Printf("Error updating todo: %s\n", err)
+		} else {
+			fmt.Println("todo", args[0], "updated:", new_content)
+		}
 	},
 }
 

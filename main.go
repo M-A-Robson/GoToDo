@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	db.initialiseDatabase()
+	db.InitialiseDatabase()
 	defer db.DB.Close()
 	cmd.Execute()
 }
