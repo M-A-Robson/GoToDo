@@ -16,6 +16,9 @@ var roundupCmd = &cobra.Command{
 	Long:  `To see todays todo highlights.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("roundup called")
+		// get all todos
+		// loop through for those created or completed today
+		// display stats: # created, # completed, list completed and outstanding
 	},
 }
 

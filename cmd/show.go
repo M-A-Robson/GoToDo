@@ -30,6 +30,12 @@ todo show [id].`,
 			fmt.Printf("Error finding todo: %s\n", err)
 		} else {
 			fmt.Println("todo", todo.ID, ":", todo.Content)
+			fmt.Println("created :", todo.Created)
+			if todo.Complete {
+				fmt.Println("completed :", todo.Finished)
+			} else {
+				fmt.Println("status : in progress")
+			}
 		}
 	},
 }

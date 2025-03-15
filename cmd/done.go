@@ -23,7 +23,7 @@ var doneCmd = &cobra.Command{
 			fmt.Println("ToDo's marked complete")
 			for _, todo := range todos {
 				if todo.Complete {
-					fmt.Println(todo.ID, ")", todo.Content)
+					fmt.Println(todo.ID, ")", todo.Content, "completed", todo.Finished)
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -11,6 +12,8 @@ type Todo struct {
 	ID       int
 	Content  string
 	Complete bool
+	Created  string
+	Finished string
 }
 
 var DB *sql.DB
@@ -26,8 +29,9 @@ func InitialiseDatabase() {
 	CREATE TABLE IF NOT EXISTS todos (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	content TEXT,
-	complete BOOLEAN default 0
-	);`
+	complete BOOLEAN default 0,
+	created TEXT NOT NULL DEFAULT '',
+	finished TEXT NOT NULL DEFAULT '');`
 
 	_, err = DB.Exec(createTableSql)
 	if err != nil {
@@ -37,14 +41,19 @@ func InitialiseDatabase() {
 
 func GetAllTodos() ([]Todo, error) {
 	todos := []Todo{}
-	rows, err := DB.Query("SELECT id, content, complete FROM todos")
+	rows, err := DB.Query("SELECT * FROM todos")
 	if err != nil {
 		return todos, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var todo Todo
-		if err := rows.Scan(&todo.ID, &todo.Content, &todo.Complete); err != nil {
+		if err := rows.Scan(
+			&todo.ID,
+			&todo.Content,
+			&todo.Complete,
+			&todo.Created,
+			&todo.Finished); err != nil {
 			return todos, err
 		}
 		todos = append(todos, todo)
@@ -57,7 +66,12 @@ func GetTodo(id int) (*Todo, error) {
 		"SELECT * FROM todos WHERE id = ?",
 		id)
 	todo := &Todo{}
-	err := row.Scan(&todo.ID, &todo.Content, &todo.Complete)
+	err := row.Scan(
+		&todo.ID,
+		&todo.Content,
+		&todo.Complete,
+		&todo.Created,
+		&todo.Finished)
 	if err != nil {
 		return nil, err
 	}
@@ -65,9 +79,10 @@ func GetTodo(id int) (*Todo, error) {
 }
 
 func CreateTodo(content string) error {
+	current_time := time.Now().Format("01-JAN-2006 15:04:00")
 	_, err := DB.Exec(
-		"INSERT INTO todos(content) VALUES(?)",
-		content)
+		"INSERT INTO todos(content, created) VALUES(?,?)",
+		content, current_time)
 	return err
 }
 
@@ -96,12 +111,15 @@ func SetTodoNotComplete(id int) error {
 
 func SetTodoCompleteStatus(id int, status bool) error {
 	var val string = "0"
+	var current_time string = ""
 	if status {
 		val = "1"
+		current_time = time.Now().Format("01-JAN-2006 15:04:00")
 	}
 	_, err := DB.Exec(
-		"UPDATE todos SET complete = ? WHERE id = ?",
+		"UPDATE todos SET (complete, finished) = (?, ?) WHERE id = ?",
 		val,
+		current_time,
 		id)
 	return err
 }
