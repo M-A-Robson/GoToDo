@@ -5,11 +5,13 @@ package cmd
 
 import (
 	"fmt"
-
 	"todo/db"
 
 	"github.com/spf13/cobra"
 )
+
+var completed string = "\u2713 "
+var in_progress string = "\u2610 "
 
 // listCmd represents the complete command
 var listCmd = &cobra.Command{
@@ -24,11 +26,11 @@ var listCmd = &cobra.Command{
 		}
 		fmt.Println("ToDo List")
 		for _, todo := range todos {
-			complete := "in progress"
+			complete := in_progress
 			if todo.Complete {
-				complete = "completed " + todo.Finished
+				complete = completed
 			}
-			fmt.Println(todo.ID, ")", todo.Content, ":", complete)
+			fmt.Println(todo.ID, complete, todo.Content, todo.Finished)
 		}
 	},
 }
