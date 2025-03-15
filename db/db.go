@@ -93,10 +93,24 @@ func DeleteTodo(id int) error {
 	return err
 }
 
+func DeleteCompletedTodos() error {
+	_, err := DB.Exec(
+		"DELETE FROM todos WHERE complete = 1")
+	return err
+}
+
 func EditTodo(id int, content string) error {
 	_, err := DB.Exec(
 		"UPDATE todos SET content = ? WHERE id = ?",
 		content,
+		id)
+	return err
+}
+
+func EditTodoId(id int, new_id int) error {
+	_, err := DB.Exec(
+		"UPDATE todos SET id = ? WHERE id = ?",
+		new_id,
 		id)
 	return err
 }
@@ -121,5 +135,12 @@ func SetTodoCompleteStatus(id int, status bool) error {
 		val,
 		current_time,
 		id)
+	return err
+}
+
+func SetAutoIncrementCounter(new_id int) error {
+	_, err := DB.Exec(
+		"UPDATE SQLITE_SEQUENCE SET seq = ? WHERE name = 'todos'",
+		new_id)
 	return err
 }

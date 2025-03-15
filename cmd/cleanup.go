@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"todo/db"
 
 	"github.com/spf13/cobra"
 )
@@ -15,20 +16,43 @@ var cleanupCmd = &cobra.Command{
 	Short: "Deletes all completed todos and updates todo ids",
 	Long:  `Deletes all completed todos and updates todo ids`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cleanup called")
+		err := db.DeleteCompletedTodos()
+		if err != nil {
+			fmt.Println("Error deleting completed todos: ", err)
+			fmt.Println("ToDo cleanup exited")
+			return
+		}
+
+		todos, err := db.GetAllTodos()
+		if err != nil {
+			fmt.Println("Error fetching todos: ", err)
+			fmt.Println("ToDo cleanup exited")
+			return
+		}
+
+		for i, todo := range todos {
+			if todo.ID != i+1 {
+				err = db.EditTodoId(todo.ID, i+1)
+			}
+			if err != nil {
+				fmt.Println("Error editing todo", todo.ID, ":", err)
+				fmt.Println("ToDo cleanup exited")
+				return
+			}
+		}
+
+		err = db.SetAutoIncrementCounter(len(todos))
+		if err != nil {
+			fmt.Println("Error resetting counter:", err)
+			return
+		}
+
+		if err == nil {
+			fmt.Println("ToDo cleanup completed")
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cleanupCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cleanupCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cleanupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
