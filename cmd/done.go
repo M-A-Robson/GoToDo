@@ -19,13 +19,21 @@ var doneCmd = &cobra.Command{
 		todos, err := db.GetAllTodos()
 		if err != nil {
 			fmt.Println("Error fetching todos: ", err)
-		} else {
-			fmt.Println("ToDo's marked complete")
-			for _, todo := range todos {
-				if todo.Complete {
-					fmt.Println(todo.ID, ")", todo.Content, "completed", todo.Finished)
-				}
+			return
+		}
+		completed_tasks := []db.Todo{}
+		for _, todo := range todos {
+			if todo.Complete {
+				completed_tasks = append(completed_tasks, todo)
 			}
+		}
+		if len(completed_tasks) == 0 {
+			fmt.Println("No ToDo's marked as complete")
+			return
+		}
+		fmt.Println("ToDo's marked complete")
+		for _, todo := range completed_tasks {
+			fmt.Println(todo.ID, "-", todo.Content, "completed", todo.Finished)
 		}
 	},
 }

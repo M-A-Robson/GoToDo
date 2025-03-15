@@ -32,7 +32,7 @@ var inprogCmd = &cobra.Command{
 		}
 		fmt.Println("ToDo's not yet marked as complete")
 		for _, todo := range in_progress {
-			fmt.Println(todo.ID, ")", todo.Content)
+			fmt.Println(todo.ID, "-", todo.Content)
 		}
 	},
 }
