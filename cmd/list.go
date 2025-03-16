@@ -31,6 +31,7 @@ var listCmd = &cobra.Command{
 				complete = completed
 			}
 			fmt.Println(todo.ID, complete, todo.Content, todo.Finished)
+			fmt.Println("created:", todo.Created)
 		}
 	},
 }

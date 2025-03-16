@@ -13,19 +13,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "todo",
 	Short: "A CLI to-do app",
-	Long: `A simple CLI app for tracking tasks. For example:
-
-todo add [task description] - to add a new todo
-todo edit [id]              - to change todo content
-todo delete [id]            - to remove todo
-todo complete [id]          - to set a todo as completed
-todo cleanup                - deletes all completed todos and reset ids
-todo roundup				- shows info on todo list
-todo show [id]				- shows data on todo item by id
-todo list					- shows all todos
-todo inprog					- shows in progress todos
-todo done					- shows all completed todos
-`,
+	Long:  `A simple CLI app for tracking tasks. For example: todo add [task description]`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

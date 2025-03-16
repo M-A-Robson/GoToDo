@@ -79,7 +79,7 @@ func GetTodo(id int) (*Todo, error) {
 }
 
 func CreateTodo(content string) error {
-	current_time := time.Now().Format("01-JAN-2006 15:04:00")
+	current_time := time.Now().Format("2006-01-02 15:04:00")
 	_, err := DB.Exec(
 		"INSERT INTO todos(content, created) VALUES(?,?)",
 		content, current_time)
@@ -128,7 +128,7 @@ func SetTodoCompleteStatus(id int, status bool) error {
 	var current_time string = ""
 	if status {
 		val = "1"
-		current_time = time.Now().Format("01-JAN-2006 15:04:00")
+		current_time = time.Now().Format("2006-01-02 15:04:00")
 	}
 	_, err := DB.Exec(
 		"UPDATE todos SET (complete, finished) = (?, ?) WHERE id = ?",
