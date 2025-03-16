@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Mark Robson https://github.com/M-A-Robson
 */
 package cmd
 

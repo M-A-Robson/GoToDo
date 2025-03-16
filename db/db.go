@@ -1,3 +1,6 @@
+/*
+Copyright © 2025 Mark Robson https://github.com/M-A-Robson
+*/
 package db
 
 import (
